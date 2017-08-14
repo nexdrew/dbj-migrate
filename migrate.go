@@ -185,6 +185,9 @@ func MigrateSync(url, migrationsPath string, relativeN int) (err []error, ok boo
 // Version returns the current migration version.
 func Version(url, migrationsPath string) (version file.Version, err error) {
 	d, err := driver.New(url)
+	if d != nil {
+		defer d.Close()
+	}
 	if err != nil {
 		return 0, err
 	}
@@ -194,6 +197,9 @@ func Version(url, migrationsPath string) (version file.Version, err error) {
 // Versions returns applied versions.
 func Versions(url, migrationsPath string) (versions file.Versions, err error) {
 	d, err := driver.New(url)
+	if d != nil {
+		defer d.Close()
+	}
 	if err != nil {
 		return file.Versions{}, err
 	}
@@ -203,6 +209,9 @@ func Versions(url, migrationsPath string) (versions file.Versions, err error) {
 // Create creates new migration files on disk.
 func Create(url, migrationsPath, name string) (*file.MigrationFile, error) {
 	d, files, _, err := initDriverAndReadMigrationFilesAndGetVersions(url, migrationsPath)
+	if d != nil {
+		defer d.Close()
+	}
 	if err != nil {
 		return nil, err
 	}
